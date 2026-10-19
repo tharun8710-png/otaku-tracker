@@ -1,0 +1,743 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10090f">
+<link rel="manifest" href="./manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>OTAKU TRACKER</title>
+
+<style>
+:root {
+  --bg:#10090f;
+  --panel:#1b111b;
+  --panel2:#251522;
+  --red:#fb365c;
+  --purple:#a78bfa;
+  --text:#fff5fa;
+  --muted:#a99aa9;
+  --line:#432335;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:
+    radial-gradient(ellipse at top,#351326 0,transparent 48%),
+    var(--bg);
+  color:var(--text);
+  font-family:system-ui,Arial,sans-serif;
+  min-height:100vh;
+}
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+header {
+  padding:28px 18px 20px;
+  text-align:center;
+  border-bottom:1px solid var(--line);
+}
+.logo {
+  width:65px;height:65px;
+  margin:auto auto 12px;
+  border:2px solid var(--red);
+  border-radius:20px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#401225,#171020);
+  box-shadow:0 0 28px #fb365c32;
+  font-size:35px;
+}
+h1 {
+  font-size:25px;
+  letter-spacing:3px;
+  margin:0;
+}
+header p {
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:2px;
+}
+main {
+  width:min(900px,100%);
+  margin:auto;
+  padding:18px 14px 45px;
+}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:20px;
+}
+.stat {
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:13px 7px;
+  text-align:center;
+}
+.stat strong {
+  display:block;
+  font-size:23px;
+  color:var(--red);
+}
+.stat span { color:var(--muted);font-size:10px; }
+.section-title {
+  font-size:14px;
+  letter-spacing:1.5px;
+  margin:20px 0 12px;
+}
+.panel {
+  padding:16px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:17px;
+  margin-bottom:18px;
+}
+label {
+  display:block;
+  color:#d9b7cb;
+  font-size:12px;
+  margin:10px 0 6px;
+}
+input,select {
+  width:100%;
+  background:#100b13;
+  color:white;
+  padding:12px;
+  border:1px solid #523045;
+  border-radius:10px;
+  outline:none;
+}
+input:focus,select:focus { border-color:var(--red); }
+.grid2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.btn {
+  border:0;
+  padding:11px 13px;
+  border-radius:10px;
+  font-weight:700;
+}
+.primary {
+  background:var(--red);
+  color:white;
+}
+.secondary {
+  background:#382035;
+  color:#f8dbea;
+  border:1px solid #62354f;
+}
+.full { width:100%;margin-top:14px; }
+.toolbar {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 145px;
+  gap:9px;
+  margin-bottom:16px;
+}
+.cards {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:13px;
+}
+.card {
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:linear-gradient(140deg,#251522,#17101a);
+  border-radius:17px;
+}
+.card-top {
+  display:flex;
+  gap:14px;
+  padding:13px;
+}
+.poster {
+  width:100px;
+  height:142px;
+  flex-shrink:0;
+  border-radius:10px;
+  object-fit:cover;
+  background:linear-gradient(145deg,#4a1731,#17101d);
+  border:1px solid #573049;
+}
+.no-poster {
+  display:grid;
+  place-items:center;
+  font-size:36px;
+}
+.info { min-width:0;flex:1; }
+.info h3 {
+  font-size:17px;
+  overflow-wrap:anywhere;
+  margin:3px 0 8px;
+}
+.status {
+  display:inline-block;
+  padding:5px 8px;
+  font-size:10px;
+  font-weight:800;
+  border-radius:6px;
+  letter-spacing:.5px;
+}
+.watching { background:#46212e;color:#ff9caf; }
+.completed { background:#193d32;color:#8df0c1; }
+.planned { background:#292442;color:#c9baff; }
+.meta { color:var(--muted);font-size:12px;margin-top:10px; }
+.progress-label {
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  color:#d8c5d3;
+  font-size:11px;
+  margin-top:13px;
+}
+.bar {
+  height:5px;
+  background:#382536;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:7px;
+}
+.fill {
+  height:100%;
+  background:linear-gradient(90deg,var(--red),var(--purple));
+  border-radius:10px;
+}
+.seasons { padding:0 13px 13px; }
+.season {
+  border-top:1px solid #3b2839;
+  padding:12px 0 3px;
+}
+.season-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:13px;
+  font-weight:700;
+}
+.season-count {
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px;
+}
+.stepper {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.stepper button {
+  width:36px;height:36px;
+  border-radius:10px;
+  background:#392035;
+  color:white;
+  border:1px solid #69405a;
+  font-size:21px;
+}
+.stepper strong { min-width:24px;text-align:center; }
+.season-tools {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:10px;
+}
+.mini {
+  border:1px solid #55364b;
+  border-radius:7px;
+  padding:6px 9px;
+  color:#e9cde0;
+  background:#261723;
+  font-size:11px;
+}
+.actions {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  padding:0 13px 13px;
+}
+.empty {
+  text-align:center;
+  padding:38px 12px;
+  color:var(--muted);
+  border:1px dashed #523045;
+  border-radius:15px;
+}
+footer {
+  text-align:center;
+  font-size:11px;
+  color:#776474;
+  padding:22px 10px;
+}
+#restoreFile { display:none; }
+.note { color:var(--muted);font-size:11px;line-height:1.6; }
+@media(min-width:600px) {
+  .cards { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">呪</div>
+  <h1>OTAKU TRACKER</h1>
+  <p>YOUR ANIME JOURNEY · CURSED EDITION</p>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat"><strong id="totalAnime">0</strong><span>ANIME</span></div>
+    <div class="stat"><strong id="watchingCount">0</strong><span>WATCHING</span></div>
+    <div class="stat"><strong id="completedCount">0</strong><span>COMPLETED</span></div>
+  </div>
+
+  <h2 class="section-title">＋ ADD TO YOUR LIBRARY</h2>
+  <form id="animeForm" class="panel">
+    <label for="animeName">Anime name *</label>
+    <input id="animeName" maxlength="120"
+      placeholder="e.g. Jujutsu Kaisen" required>
+
+    <label for="posterUrl">Poster image URL (optional)</label>
+    <input id="posterUrl" type="url" maxlength="2000"
+      placeholder="https://example.com/poster.jpg">
+
+    <div class="grid2">
+      <div>
+        <label for="firstSeason">First season name</label>
+        <input id="firstSeason" maxlength="60" value="Season 1">
+      </div>
+      <div>
+        <label for="episodeTotal">Total episodes</label>
+        <input id="episodeTotal" type="number"
+          min="1" max="10000" placeholder="e.g. 24">
+      </div>
+    </div>
+
+    <button class="btn primary full" type="submit">
+      ＋ ADD ANIME
+    </button>
+  </form>
+
+  <h2 class="section-title">◈ MY COLLECTION</h2>
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="⌕ Search anime...">
+    <select id="filter" aria-label="Filter anime">
+      <option value="All">All anime</option>
+      <option value="Watching">Watching</option>
+      <option value="Completed">Completed</option>
+      <option value="Plan to Watch">Plan to Watch</option>
+    </select>
+  </div>
+
+  <div id="cards" class="cards"></div>
+
+  <h2 class="section-title">⚙ DATA & BACKUP</h2>
+  <div class="panel">
+    <button id="backup" class="btn secondary full" type="button">
+      ↓ EXPORT BACKUP
+    </button>
+    <button id="restore" class="btn secondary full" type="button">
+      ↑ RESTORE BACKUP
+    </button>
+    <input id="restoreFile" type="file" accept=".json,application/json">
+    <p class="note">
+      Your anime list is stored on this device. Export a JSON backup
+      regularly so you can restore it later or move it to another phone.
+      Restoring replaces your current library.
+    </p>
+  </div>
+
+  <footer>OTAKU TRACKER · MADE FOR ANIME FANS</footer>
+</main>
+
+<script>
+"use strict";
+
+const STORAGE_KEY = "otaku_tracker_v2";
+let animeList = [];
+
+try {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  if (Array.isArray(saved)) animeList = saved.filter(isValidAnime);
+} catch (error) {
+  animeList = [];
+}
+
+function isValidAnime(a) {
+  return a && typeof a.name === "string" &&
+    Array.isArray(a.seasons) &&
+    a.seasons.every(s =>
+      s && typeof s.name === "string" &&
+      Number.isInteger(s.watched) && s.watched >= 0 &&
+      (s.total === null ||
+       (Number.isInteger(s.total) && s.total >= s.watched))
+    );
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[c]);
+}
+
+function safePoster(value) {
+  try {
+    const u = new URL(value);
+    return ["https:", "http:"].includes(u.protocol) ? u.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function makeId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(animeList));
+  } catch (error) {
+    alert("Could not save. Your device storage may be full. Export a backup.");
+  }
+  render();
+}
+
+function watchedTotal(anime) {
+  return anime.seasons.reduce((sum, s) => sum + s.watched, 0);
+}
+
+function knownTotal(anime) {
+  if (!anime.seasons.length ||
+      anime.seasons.some(s => s.total === null)) return null;
+  return anime.seasons.reduce((sum, s) => sum + s.total, 0);
+}
+
+function statusOf(anime) {
+  const watched = watchedTotal(anime);
+  const total = knownTotal(anime);
+
+  if (total !== null && total > 0 && watched >= total) return "Completed";
+  if (watched > 0) return "Watching";
+  return "Plan to Watch";
+}
+
+function progressOf(anime) {
+  const total = knownTotal(anime);
+  if (total === null || total === 0) return null;
+  return Math.min(100, Math.round(watchedTotal(anime) / total * 100));
+}
+
+document.getElementById("animeForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = document.getElementById("animeName").value.trim();
+  const posterInput = document.getElementById("posterUrl").value.trim();
+  const seasonName = document.getElementById("firstSeason").value.trim() || "Season 1";
+  const totalRaw = document.getElementById("episodeTotal").value.trim();
+  const total = totalRaw === "" ? null : Number(totalRaw);
+
+  if (!name) return;
+  if (posterInput && !safePoster(posterInput)) {
+    alert("Please enter a valid http or https poster URL.");
+    return;
+  }
+  if (total !== null &&
+      (!Number.isInteger(total) || total < 1 || total > 10000)) {
+    alert("Enter a valid total episode count.");
+    return;
+  }
+
+  animeList.unshift({
+    id:makeId(),
+    name,
+    poster:safePoster(posterInput),
+    seasons:[{id:makeId(),name:seasonName,total,watched:0}]
+  });
+
+  event.target.reset();
+  document.getElementById("firstSeason").value = "Season 1";
+  save();
+});
+
+function changeEpisode(animeId, seasonId, amount) {
+  const anime = animeList.find(a => a.id === animeId);
+  if (!anime) return;
+  const season = anime.seasons.find(s => s.id === seasonId);
+  if (!season) return;
+
+  season.watched = Math.max(0, season.watched + amount);
+  if (season.total !== null) {
+    season.watched = Math.min(season.total, season.watched);
+  }
+  save();
+}
+
+function addSeason(id) {
+  const anime = animeList.find(a => a.id === id);
+  if (!anime) return;
+
+  const name = prompt("Season name:", "Season " + (anime.seasons.length + 1));
+  if (name === null || !name.trim()) return;
+
+  const raw = prompt("Total episodes? Leave blank if unknown:", "12");
+  if (raw === null) return;
+  const total = raw.trim() === "" ? null : Number(raw);
+
+  if (total !== null &&
+      (!Number.isInteger(total) || total < 1 || total > 10000)) {
+    alert("Enter a valid positive whole number.");
+    return;
+  }
+
+  anime.seasons.push({
+    id:makeId(), name:name.trim().slice(0,60), total, watched:0
+  });
+  save();
+}
+
+function editAnime(id) {
+  const anime = animeList.find(a => a.id === id);
+  if (!anime) return;
+
+  const name = prompt("Edit anime name:", anime.name);
+  if (name === null || !name.trim()) return;
+
+  const poster = prompt("Poster URL (blank to remove):", anime.poster || "");
+  if (poster === null) return;
+  if (poster.trim() && !safePoster(poster.trim())) {
+    alert("Please use a valid http or https image URL.");
+    return;
+  }
+
+  anime.name = name.trim().slice(0,120);
+  anime.poster = safePoster(poster.trim());
+  save();
+}
+
+function editSeason(id, seasonId) {
+  const anime = animeList.find(a => a.id === id);
+  if (!anime) return;
+  const season = anime.seasons.find(s => s.id === seasonId);
+  if (!season) return;
+
+  const name = prompt("Season name:", season.name);
+  if (name === null || !name.trim()) return;
+
+  const raw = prompt("Total episodes (blank = unknown):", season.total ?? "");
+  if (raw === null) return;
+  const total = raw.trim() === "" ? null : Number(raw);
+
+  if (total !== null &&
+      (!Number.isInteger(total) || total < season.watched || total < 1)) {
+    alert("Total must be a whole number at least as large as watched episodes.");
+    return;
+  }
+
+  season.name = name.trim().slice(0,60);
+  season.total = total;
+  save();
+}
+
+function deleteAnime(id) {
+  const anime = animeList.find(a => a.id === id);
+  if (!anime) return;
+  if (!confirm("Remove " + anime.name + " and all its episode progress?")) return;
+  animeList = animeList.filter(a => a.id !== id);
+  save();
+}
+
+function deleteSeason(id, seasonId) {
+  const anime = animeList.find(a => a.id === id);
+  if (!anime || anime.seasons.length <= 1) {
+    alert("An anime must keep at least one season.");
+    return;
+  }
+  if (!confirm("Remove this season and its episode progress?")) return;
+  anime.seasons = anime.seasons.filter(s => s.id !== seasonId);
+  save();
+}
+
+function render() {
+  const query = document.getElementById("search").value.trim().toLowerCase();
+  const filter = document.getElementById("filter").value;
+
+  document.getElementById("totalAnime").textContent = animeList.length;
+  document.getElementById("watchingCount").textContent =
+    animeList.filter(a => statusOf(a) === "Watching").length;
+  document.getElementById("completedCount").textContent =
+    animeList.filter(a => statusOf(a) === "Completed").length;
+
+  const filtered = animeList.filter(a =>
+    a.name.toLowerCase().includes(query) &&
+    (filter === "All" || statusOf(a) === filter)
+  );
+
+  const cards = document.getElementById("cards");
+
+  if (!filtered.length) {
+    cards.innerHTML = '<div class="empty">呪<br><br>No anime found.<br>Add an anime or change your search/filter.</div>';
+    return;
+  }
+
+  cards.innerHTML = filtered.map(a => {
+    const status = statusOf(a);
+    const total = knownTotal(a);
+    const progress = progressOf(a);
+    const poster = safePoster(a.poster || "");
+    const posterHTML = poster
+      ? `<img class="poster" src="${escapeHTML(poster)}" alt="Anime poster" loading="lazy">`
+      : '<div class="poster no-poster" aria-label="No poster">呪</div>';
+
+    return `
+      <article class="card">
+        <div class="card-top">
+          ${posterHTML}
+          <div class="info">
+            <h3>${escapeHTML(a.name)}</h3>
+            <span class="status ${
+              status === "Completed" ? "completed" :
+              status === "Watching" ? "watching" : "planned"
+            }">${escapeHTML(status.toUpperCase())}</span>
+            <div class="meta">${watchedTotal(a)} episodes watched</div>
+            <div class="meta">${
+              total === null ? "Total episodes unknown" : total + " total episodes"
+            }</div>
+            <div class="progress-label">
+              <span>OVERALL PROGRESS</span>
+              <span>${progress === null ? "—" : progress + "%"}</span>
+            </div>
+            <div class="bar"><div class="fill" style="width:${
+              progress === null ? 0 : progress
+            }%"></div></div>
+          </div>
+        </div>
+
+        <div class="seasons">
+          ${a.seasons.map(s => `
+            <div class="season">
+              <div class="season-head">
+                <span>${escapeHTML(s.name)}</span>
+                <div class="stepper">
+                  <button type="button" data-action="minus"
+                    data-anime="${escapeHTML(a.id)}"
+                    data-season="${escapeHTML(s.id)}"
+                    aria-label="Decrease watched episodes">−</button>
+                  <strong>${s.watched}</strong>
+                  <button type="button" data-action="plus"
+                    data-anime="${escapeHTML(a.id)}"
+                    data-season="${escapeHTML(s.id)}"
+                    aria-label="Increase watched episodes">+</button>
+                </div>
+              </div>
+              <div class="season-count">${
+                s.total === null ? s.watched + " watched · total unknown"
+                : s.watched + " / " + s.total + " episodes"
+              }</div>
+              <div class="season-tools">
+                <button class="mini" data-action="edit-season"
+                  data-anime="${escapeHTML(a.id)}"
+                  data-season="${escapeHTML(s.id)}">Edit season</button>
+                ${a.seasons.length > 1 ? `
+                  <button class="mini" data-action="delete-season"
+                    data-anime="${escapeHTML(a.id)}"
+                    data-season="${escapeHTML(s.id)}">Remove season</button>` : ""}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="actions">
+          <button class="mini" data-action="add-season"
+            data-anime="${escapeHTML(a.id)}">＋ Add season</button>
+          <button class="mini" data-action="edit-anime"
+            data-anime="${escapeHTML(a.id)}">Edit anime / poster</button>
+          <button class="mini" data-action="delete-anime"
+            data-anime="${escapeHTML(a.id)}">Remove anime</button>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+document.getElementById("cards").addEventListener("click", event => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+
+  const action = button.dataset.action;
+  const id = button.dataset.anime;
+  const seasonId = button.dataset.season;
+
+  if (action === "plus") changeEpisode(id, seasonId, 1);
+  if (action === "minus") changeEpisode(id, seasonId, -1);
+  if (action === "add-season") addSeason(id);
+  if (action === "edit-anime") editAnime(id);
+  if (action === "edit-season") editSeason(id, seasonId);
+  if (action === "delete-season") deleteSeason(id, seasonId);
+  if (action === "delete-anime") deleteAnime(id);
+});
+
+document.getElementById("search").addEventListener("input", render);
+document.getElementById("filter").addEventListener("change", render);
+
+document.getElementById("backup").addEventListener("click", () => {
+  const data = {
+    app:"OTAKU TRACKER",
+    version:2,
+    exportedAt:new Date().toISOString(),
+    anime:animeList
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type:"application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "otaku-tracker-backup.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+document.getElementById("restore").addEventListener("click", () => {
+  document.getElementById("restoreFile").click();
+});
+
+document.getElementById("restoreFile").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const data = JSON.parse(await file.text());
+    const incoming = Array.isArray(data) ? data : data.anime;
+
+    if (!Array.isArray(incoming) || !incoming.every(isValidAnime)) {
+      throw new Error("Invalid backup format");
+    }
+    if (!confirm("Replace your current anime list with this backup?")) return;
+
+    animeList = incoming.map(a => ({
+      ...a,
+      id:makeId(),
+      poster:safePoster(a.poster || ""),
+      seasons:a.seasons.map(s => ({...s,id:makeId()}))
+    }));
+    save();
+    alert("Backup restored successfully!");
+  } catch (error) {
+    alert("Could not restore this file. Please choose a valid Otaku Tracker JSON backup.");
+  } finally {
+    event.target.value = "";
+  }
+});
+
+render();
+</script>
+</body>
+<script>
+if ("serviceWorker" in navigator &&
+    location.protocol === "https:") {
+  navigator.serviceWorker.register("./sw.js")
+    .catch(console.error);
+}
+</script>
+</html>
